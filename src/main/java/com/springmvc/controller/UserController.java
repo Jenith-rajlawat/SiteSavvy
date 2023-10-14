@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.springmvc.model.User;
 import com.springmvc.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class UserController {
 
@@ -23,16 +25,21 @@ public class UserController {
 		}
 		
 		@PostMapping("/login")
-		public String postLogin(@ModelAttribute User user,Model model) {
+		public String postLogin(@ModelAttribute User user,Model model,HttpSession session) {
 			
 			
 			User u= userService.userLogin(user.getEmail(),user.getPassword());
 			
 			if(u!=null) {
+				
+				session.setAttribute("validUser", u);
+				session.setMaxInactiveInterval(200);
 			return "home";}
 			else {
 			
-				model.addAttribute("message","Wrong Login Credentials");
+				
+				
+			//	model.addAttribute("message","Wrong Login Credentials");
 				
 				return "login";}
 		}
@@ -60,4 +67,31 @@ public class UserController {
 			}
 			
 		}
+		
+		
+		//---------------------------------To Logout
+		
+		
+		@GetMapping("/logout")
+		public String logout(HttpSession session) {
+			
+			session.invalidate();//kills session
+			return "login";
+			
+		}
+		
+		
+		
+		
+		
+		
+		//----------------------------------About Page
+		
+		@GetMapping("/about")
+		public String getProfile() {
+			return "about";
+		}
+		
+		
+		
 }
