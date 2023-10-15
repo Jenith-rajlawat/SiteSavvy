@@ -37,6 +37,14 @@ public class PostController {
 	
 	}
 	
+	
+	//--------------Displaying all post
+	@GetMapping("/posts")
+	public String getAllPost(Model model) {
+		
+		model.addAttribute("pList",postService.getAllPost());
+		return "home";
+	}
 
 	
 }
